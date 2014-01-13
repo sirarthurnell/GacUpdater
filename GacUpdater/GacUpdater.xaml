@@ -1,0 +1,67 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="GacUpdater" x:Name="mainForm" SizeToContent="WidthAndHeight" MinWidth="400" MinHeight="300">
+    <Window.Background>
+        <LinearGradientBrush>
+            <GradientStop Color="Orange" Offset="0.0" />
+            <GradientStop Color="Gray" Offset="0.5" />
+            <GradientStop Color="Darkgreen" Offset="1.0" />
+        </LinearGradientBrush>
+    </Window.Background>
+    <DockPanel>
+        <StatusBar Margin="5" DockPanel.Dock="Bottom" MinHeight="20" BorderBrush="#FF688CAF" BorderThickness="1">
+            <StatusBarItem>
+                <TextBlock x:Name="txtStatus">Activo</TextBlock>
+            </StatusBarItem>
+        </StatusBar>              
+        <DockPanel LastChildFill="True">
+            <StackPanel Orientation="Vertical" DockPanel.Dock="Right">
+                <Button Margin="5, 5, 5, 0" x:Name="btnExplore" Click="btnExplore_Click">Explorar</Button>
+                <Button Margin="5, 5, 5, 0" x:Name="btnSelectAll" Click="btnSelectAll_Click">Seleccionar todos</Button>
+                <Button Margin="5, 5, 5, 0" x:Name="btnSelectNone" Click="btnSelectNone_Click">Deseleccionar todos</Button>
+                <Button Margin="5, 5, 5, 0" x:Name="btnApplyChanges" Click="btnApplyChanges_Click">Aplicar cambios</Button>
+            </StackPanel>
+            <DataGrid x:Name="grid" Margin="5" AutoGenerateColumns="False">
+                <DataGrid.Resources>
+                    <Style x:Key="errorStyle" TargetType="{x:Type TextBox}">
+                        <Setter Property="Padding" Value="-2"/>
+                        <Style.Triggers>
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Setter Property="Background" Value="Red"/>
+                                <Setter Property="ToolTip" 
+                Value="{Binding RelativeSource={RelativeSource Self},
+                  Path=(Validation.Errors)[0].ErrorContent}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Nombre" Binding="{Binding Path=name}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Token" Binding="{Binding Path=token}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Cultura" Binding="{Binding Path=culture}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Nueva versión" Binding="{Binding Path=version}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Directiva sujerida"
+                                        EditingElementStyle="{StaticResource errorStyle}"
+                                        Binding="{Binding Path=newdirective, ValidatesOnExceptions=True}" />
+                    <DataGridCheckBoxColumn Header="¿Actualizar?" Binding="{Binding Path=update}" />
+                </DataGrid.Columns>
+                <DataGrid.RowValidationErrorTemplate>
+                    <ControlTemplate>
+                        <Grid Margin="0,-2,0,-2"
+                            ToolTip="{Binding RelativeSource={RelativeSource
+                            FindAncestor, AncestorType={x:Type DataGridRow}},
+                            Path=(Validation.Errors)[0].ErrorContent}">
+                            <Ellipse StrokeThickness="0" Fill="Red" 
+                                Width="{TemplateBinding FontSize}" 
+                                Height="{TemplateBinding FontSize}" />
+                            <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+                                FontWeight="Bold" Foreground="White" 
+                                HorizontalAlignment="Center"  />
+                        </Grid>
+                    </ControlTemplate>
+                </DataGrid.RowValidationErrorTemplate>
+            </DataGrid>
+        </DockPanel>        
+    </DockPanel>
+</Window> 
